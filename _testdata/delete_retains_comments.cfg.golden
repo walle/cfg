@@ -1,0 +1,9 @@
+# Test data to verify that new values can be deleted programmatically
+
+  # Foo value (string)
+foo = bar
+
+# Bar value (string)
+
+# Foobar value (string)
+  foobar = baz

@@ -1,0 +1,4 @@
+# Test data to verify that new values can be added programmatically
+
+foo = bar
+bar = foo

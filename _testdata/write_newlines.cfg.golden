@@ -1,0 +1,1 @@
+foo = cfg\nshould\nread and escape\nnewlines
