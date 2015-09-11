@@ -70,7 +70,7 @@ func UnmarshalFromConfig(c *Config, v interface{}) error {
 
 		// Loop through all keys and match them against the field
 		// set the value if it matches.
-		for key, _ := range c.values {
+		for key := range c.values {
 			// Check so the tag, or the name case insensitive matches, if not
 			// go on to the next key
 			if key != tag && bytes.EqualFold([]byte(key), []byte(sf.Name)) == false {
