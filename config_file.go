@@ -17,13 +17,16 @@ type ConfigFile struct {
 func NewConfigFile(path string) (*ConfigFile, error) {
 	f, err := os.OpenFile(path, os.O_RDONLY, 0644)
 	if err != nil {
-		return nil, fmt.Errorf("Could not open file: %s", err)
+		return nil, fmt.Errorf("cfg: could not open file: %s", err)
 	}
 	c, err := NewConfigFromReader(f)
 	if err != nil {
-		return nil, fmt.Errorf("Could not parse file: %s", err)
+		return nil, fmt.Errorf("cfg: could not parse file: %s", err)
 	}
-	f.Close()
+	err = f.Close()
+	if err != nil {
+		return nil, fmt.Errorf("cfg: could not close file: %s", err)
+	}
 
 	return &ConfigFile{path: path, Config: c}, nil
 }
@@ -33,10 +36,16 @@ func NewConfigFile(path string) (*ConfigFile, error) {
 func (c *ConfigFile) Persist() error {
 	f, err := os.OpenFile(c.path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		return fmt.Errorf("Could not open file: %s", err)
+		return fmt.Errorf("cfg: could not open file: %s", err)
 	}
-	f.WriteString(c.String())
-	f.Close()
+	_, err = f.WriteString(c.String())
+	if err != nil {
+		return fmt.Errorf("cfg: could not write file: %s", err)
+	}
+	err = f.Close()
+	if err != nil {
+		return fmt.Errorf("cfg: could not close file: %s", err)
+	}
 
 	return nil
 }

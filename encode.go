@@ -59,19 +59,10 @@ func Marshal(v interface{}) ([]byte, error) {
 			key = tag
 		}
 
-		// Update the value with the correct type
-		switch fv.Kind() {
-		case reflect.Int:
-			buf.WriteString(fmt.Sprintf("%s = %v\n", key, fv.Int()))
-		case reflect.Float64:
-			buf.WriteString(fmt.Sprintf("%s = %v\n", key, fv.Float()))
-		case reflect.Bool:
-			buf.WriteString(fmt.Sprintf("%s = %v\n", key, fv.Bool()))
-		case reflect.String:
-			qval := strings.Replace(fv.String(), "\n", "\\n", -1)
-			buf.WriteString(fmt.Sprintf("%s = %s\n", key, qval))
+		err := writeValue(buf, &fv, key)
+		if err != nil {
+			return nil, fmt.Errorf("cfg: error writing value: %s", err)
 		}
-
 	}
 	return buf.Bytes(), nil
 }
@@ -108,4 +99,25 @@ func MarshalToConfig(v interface{}) (*Config, error) {
 	}
 
 	return c, nil
+}
+
+// writeValue adds the key value to buffer if it is exported and not skipped.
+func writeValue(buf *bytes.Buffer, fv *reflect.Value, key string) error {
+	switch fv.Kind() {
+	case reflect.Int:
+		_, err := buf.WriteString(fmt.Sprintf("%s = %v\n", key, fv.Int()))
+		return err
+	case reflect.Float64:
+		_, err := buf.WriteString(fmt.Sprintf("%s = %v\n", key, fv.Float()))
+		return err
+	case reflect.Bool:
+		_, err := buf.WriteString(fmt.Sprintf("%s = %v\n", key, fv.Bool()))
+		return err
+	case reflect.String:
+		qval := strings.Replace(fv.String(), "\n", "\\n", -1)
+		_, err := buf.WriteString(fmt.Sprintf("%s = %s\n", key, qval))
+		return err
+	}
+
+	return nil
 }

@@ -77,30 +77,45 @@ func UnmarshalFromConfig(c *Config, v interface{}) error {
 				continue
 			}
 
-			// Update the value with the correct type
-			switch fv.Kind() {
-			case reflect.Int:
-				val, err := c.GetInt(key)
-				if err == nil {
-					fv.SetInt(int64(val))
-				}
-			case reflect.Float64:
-				val, err := c.GetFloat(key)
-				if err == nil {
-					fv.SetFloat(val)
-				}
-			case reflect.Bool:
-				val, err := c.GetBool(key)
-				if err == nil {
-					fv.SetBool(val)
-				}
-			case reflect.String:
-				val, err := c.GetString(key)
-				if err == nil {
-					fv.SetString(val)
-				}
+			err := setValue(&fv, c, key)
+			if err != nil {
+				return fmt.Errorf("cfg: error setting field value: %s", err)
 			}
 		}
+	}
+
+	return nil
+}
+
+// setValue updates the field value in fv to the data extracted from config
+// with key.
+func setValue(fv *reflect.Value, c *Config, key string) error {
+	// Update the value with the correct type
+	switch fv.Kind() {
+	case reflect.Int:
+		val, err := c.GetInt(key)
+		if err != nil {
+			return err
+		}
+		fv.SetInt(int64(val))
+	case reflect.Float64:
+		val, err := c.GetFloat(key)
+		if err != nil {
+			return err
+		}
+		fv.SetFloat(val)
+	case reflect.Bool:
+		val, err := c.GetBool(key)
+		if err != nil {
+			return err
+		}
+		fv.SetBool(val)
+	case reflect.String:
+		val, err := c.GetString(key)
+		if err != nil {
+			return err
+		}
+		fv.SetString(val)
 	}
 
 	return nil

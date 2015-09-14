@@ -65,9 +65,12 @@ func Test_Types(t *testing.T) {
 	if s != "This is a string!" {
 		t.Errorf("Expected %q got %q\n", "This is a string!", s)
 	}
+}
 
-	// Errors if uncompatible types
-	_, err = config.GetInt("string")
+func Test_IncompatibleTypes(t *testing.T) {
+	config := newConfigFromFile("types", t)
+
+	_, err := config.GetInt("string")
 	if err == nil {
 		t.Errorf("Expected type error but got none")
 	}
@@ -81,9 +84,12 @@ func Test_Types(t *testing.T) {
 	if err == nil {
 		t.Errorf("Expected type error but got none")
 	}
+}
 
-	// Zero values and error if key is undefined
-	_, err = config.GetInt("undefined")
+func Test_UndefinedKey(t *testing.T) {
+	config := newConfigFromFile("types", t)
+
+	_, err := config.GetInt("undefined")
 	if err == nil {
 		t.Errorf("Expected not found error but got none")
 	}
