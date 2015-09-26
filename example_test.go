@@ -26,12 +26,6 @@ func ExampleMarshal() {
 		NotUsed:    "bar",
 	}
 
-	const myConfigEncoded = `Answer = 42
-Pi = 3.14
-is_active = true
-quotes = Alea iacta est\nEt tu, Brute?
-`
-
 	data, err := cfg.Marshal(myConfig)
 	if err != nil {
 		// Handle error
