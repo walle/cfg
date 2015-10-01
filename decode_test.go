@@ -124,3 +124,16 @@ func Test_UnmarshalToNotStruct(t *testing.T) {
 		t.Errorf("Did not get error when trying to unmarshal to int\n")
 	}
 }
+
+func Test_UnmarshalQuotedString(t *testing.T) {
+	myConfig := &MyConfig{}
+	conf := `quotes = "a quoted string"`
+	err := cfg.Unmarshal([]byte(conf), myConfig)
+	if err != nil {
+		t.Errorf("Error parsing the config: %s\n", err)
+	}
+	q := `"a quoted string"`
+	if myConfig.Quotes != q {
+		t.Errorf("Expected %q, got %q\n", q, myConfig.Quotes)
+	}
+}
