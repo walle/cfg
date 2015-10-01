@@ -111,6 +111,17 @@ String values that contain line breaks have the line breaks escaped with the
 `\n` character. The config handles the escaping and unescapes the values when
 they are accessed.
 
+### Heads up
+
+String configuration values are read exactly as they are written, with the
+exception of line breaks that are encoded to keep the value on the same line.
+
+From issue [#2](https://github.com/walle/cfg/issues/2) "Most other "INI-like" formats strip quotes from the front and
+back of strings".
+
+This is not the case in cfg, if you have the value "foo" you get the value
+"foo" when you use the value in code.
+
 ## Installation
 
 To install cfg, just use `go get`.
